@@ -4,6 +4,7 @@ import PhotoContext from '../contexts/PhotoContext';
 import TattooContext from '../contexts/TattooContext';
 import { Platform } from 'react-native';
 import axios from 'axios';
+import * as FileSystem from 'expo-file-system';
 
 const ImageScreen = ({ navigation }) => {
   const { photoUri, setPhotoUri } = useContext(PhotoContext);
@@ -23,29 +24,22 @@ const ImageScreen = ({ navigation }) => {
     const y = 163;
     const tattooWidth = 90;
     const tattooLength = 90;
-    const formData = new FormData();
 
-    const armFile = {
-      uri: Platform.OS === 'android' ? photoUri : photoUri.replace('file://', ''),
-      type: 'image/jpeg',
-      name: 'arm.jpg',
+    const armFileBase64 = await FileSystem.readAsStringAsync(photoUri, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+
+    const requestData = {
+      x: x ? x.toString() : '',
+      y: y ? y.toString() : '',
+      height: tattooWidth ? tattooWidth.toString() : '',
+      width: tattooLength ? tattooLength.toString() : '',
+      armFile: armFileBase64, // Send the base64 string instead of the file path
+      tattooUri: tattooUri.uri,
     };
-    formData.append('arm_file', armFile);
-
-    // Since tattooUri is a URL, you can send it as a string.
-    formData.append('tattooUri', tattooUri.uri.replace('10.0.2.2', 'localhost'));
-
-    formData.append('x', x ? x.toString() : '');
-    formData.append('y', y ? y.toString() : '');
-    formData.append('height', tattooWidth ? tattooWidth.toString() : '');
-    formData.append('width', tattooLength ? tattooLength.toString() : '');
 
     try {
-      const response = await axios.post('http://10.0.2.2:5000/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+      const response = await axios.post('http://13.211.138.227/upload', requestData);
       console.log(response.data);
       // Set the generated image uri here
       setGeneratedUri(response.data.img);
@@ -82,7 +76,7 @@ const ImageScreen = ({ navigation }) => {
         <TouchableOpacity style={styles.overlay} onPress={() => setModalVisible(false)} activeOpacity={1}>
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
-              <Image source={{ uri: generatedUri }} style={styles.finalImage} />
+            <Image source={{ uri: 'data:image/png;base64,' + generatedUri }} style={styles.finalImage} />
               <TouchableOpacity style={styles.modalButton} onPress={handleSaveImage}>
                 <Text style={styles.buttonText}>Save Image</Text>
               </TouchableOpacity>

@@ -17,26 +17,13 @@ const DiscoverPage = () => {
 
   useEffect(() => {
     console.log('ok')
-    //
-    try {
-    fetch('http://192.168.1.112:3000/image-list')
-      .then(response => response.json())
-      .then(images => {
-        console.log('yay')
-        const newImageData = images.map((image, index) => {
-          return { isEmpty: false, image: { uri: `http://192.168.1.112:3000/images/${image}` }};
-        });
-        setData(prevData => {
-          prevData.splice(0, newImageData.length, ...newImageData);
-          return [...prevData];
-        });
-      })
-      .catch(error => {
-        console.error(error);
-      });
-    } catch (error) {
-      console.error(error)
-    }
+    const newData = [...data];
+    newData[0] = { isEmpty: false, image:{ uri: 'http://box5850.temp.domains/~crollme/images/flowersTattoo.jpg' } };
+    newData[1] = { isEmpty: false, image:{ uri: 'http://box5850.temp.domains/~crollme/images/cardTattoo.jpg' } };
+    newData[2] = { isEmpty: false, image:{ uri: 'http://box5850.temp.domains/~crollme/images/skeletonArmTattoo.jpg' } };
+    newData[3] = { isEmpty: false, image:{ uri: 'http://box5850.temp.domains/~crollme/images/swordTattoo.jpg' } };
+    newData[4] = { isEmpty: false, image:{ uri: 'http://box5850.temp.domains/~crollme/images/tribalTattoo.jpg' } };
+    setData(newData);
   }, []);
 
   const renderItem = ({ item }) => (
