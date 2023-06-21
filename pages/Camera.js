@@ -14,21 +14,23 @@ const CameraScreen = () => {
     const navigation = useNavigation();
 
     const getSupportedRatios = async () => {
-        const ratios = await cameraRef.current.getSupportedRatiosAsync();
-        console.log('Supported Ratios: ', ratios);
-        if (ratios.includes('4:3')) {
-            setRatio('4:3');
-        } else if (ratios.length) {
-            setRatio(ratios[ratios.length - 1]);
+        if (cameraRef.current) {
+            const ratios = await cameraRef.current.getSupportedRatiosAsync();
+            console.log('Supported Ratios: ', ratios);
+            if (ratios.includes('4:3')) {
+                setRatio('4:3');
+            } else if (ratios.length) {
+                setRatio(ratios[ratios.length - 1]);
+            }
         }
     }
 
     useEffect(() => {
         (async () => {
-            const { status } = await Camera.requestPermissionsAsync();
+            const { status } = await Camera.requestCameraPermissionsAsync();
             setHasPermission(status === 'granted');
             if (status === 'granted') {
-                getSupportedRatios();
+                //getSupportedRatios();
             }
         })();
     }, []);
@@ -61,7 +63,7 @@ const CameraScreen = () => {
 
     return (
         <View style={styles.container}>
-            <Camera style={styles.camera} type={type} ref={cameraRef} ratio={ratio}>
+            <Camera style={styles.camera} type={type} ref={cameraRef} ratio={ratio} onCameraReady={getSupportedRatios}>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity onPress={flipCamera} style={styles.flipButton}>
                         <MaterialIcons name="flip-camera-ios" size={36} color="white" />

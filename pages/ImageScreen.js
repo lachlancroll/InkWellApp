@@ -76,7 +76,7 @@ const ImageScreen = ({ navigation }) => {
         <TouchableOpacity style={styles.overlay} onPress={() => setModalVisible(false)} activeOpacity={1}>
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
-            <Image source={{ uri: 'data:image/png;base64,' + generatedUri }} style={styles.finalImage} />
+            <Image source={{ uri: 'data:image/png;base64,' + generatedUri }} style={styles.finalImage} resizeMode="contain"/>
               <TouchableOpacity style={styles.modalButton} onPress={handleSaveImage}>
                 <Text style={styles.buttonText}>Save Image</Text>
               </TouchableOpacity>
@@ -125,8 +125,8 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   finalImage: {
-    width: '100%',
     height: 200,  // Or whatever size you want
+    width: 100,
     marginBottom: 20,
     borderWidth: 1,
     borderColor: 'red'
