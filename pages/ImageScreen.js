@@ -2,7 +2,6 @@ import React, { useContext, useState } from 'react';
 import { View, Image, StyleSheet, Text, Button, Modal, TouchableOpacity, Dimensions } from 'react-native';
 import PhotoContext from '../contexts/PhotoContext';
 import TattooContext from '../contexts/TattooContext';
-import { Platform } from 'react-native';
 import axios from 'axios';
 import * as FileSystem from 'expo-file-system';
 
@@ -20,6 +19,7 @@ const ImageScreen = ({ navigation }) => {
   };
 
   const handleGenerate = async () => {
+    const start = new Date();
     const x = 60;
     const y = 163;
     const tattooWidth = 90;
@@ -28,6 +28,9 @@ const ImageScreen = ({ navigation }) => {
     const armFileBase64 = await FileSystem.readAsStringAsync(photoUri, {
       encoding: FileSystem.EncodingType.Base64,
     });
+    const firstEnd = new Date();
+    const firstTimeTaken = firstEnd - start;
+    console.log("decoding time taken in milliseconds: " + firstTimeTaken);
 
     const requestData = {
       x: x ? x.toString() : '',
@@ -39,14 +42,16 @@ const ImageScreen = ({ navigation }) => {
     };
 
     try {
-      const response = await axios.post('http://13.211.138.227/upload', requestData);
-      console.log(response.data);
+      const response = await axios.post('http://192.168.1.112:5000/upload', requestData);
       // Set the generated image uri here
       setGeneratedUri(response.data.img);
       setModalVisible(true);  // Show the modal on successful image generation
     } catch (error) {
       console.error(error);
     }
+    const end = new Date();
+    const timeTaken = end - start;
+    console.log("Time taken in milliseconds: " + timeTaken);
   };
 
   const handleSaveImage = () => {
@@ -76,7 +81,7 @@ const ImageScreen = ({ navigation }) => {
         <TouchableOpacity style={styles.overlay} onPress={() => setModalVisible(false)} activeOpacity={1}>
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
-            <Image source={{ uri: 'data:image/png;base64,' + generatedUri }} style={styles.finalImage} resizeMode="contain"/>
+              <Image source={{ uri: 'data:image/png;base64,' + generatedUri }} style={styles.finalImage} resizeMode="contain" />
               <TouchableOpacity style={styles.modalButton} onPress={handleSaveImage}>
                 <Text style={styles.buttonText}>Save Image</Text>
               </TouchableOpacity>
@@ -115,6 +120,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContainer: {
+    flex: 1, // Add flex property
+    justifyContent: 'center', // Center children vertically
+    alignItems: 'center', // Center children horizontally
     backgroundColor: 'white',
     width: '80%',
     borderRadius: 10,
@@ -123,13 +131,13 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     padding: 20,
+    justifyContent: 'center', // Center children vertically
+    alignItems: 'center', // Center children horizontally
   },
   finalImage: {
-    height: 200,  // Or whatever size you want
-    width: 100,
+    height: 400,  // Or whatever size you want
+    width: 225,
     marginBottom: 20,
-    borderWidth: 1,
-    borderColor: 'red'
   },
   modalButton: {
     backgroundColor: '#2196F3',
