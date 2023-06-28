@@ -18,11 +18,7 @@ const DiscoverPage = () => {
   useEffect(() => {
     console.log('ok')
     const newData = [...data];
-    newData[0] = { isEmpty: false, image:{ uri: 'http://box5850.temp.domains/~crollme/images/flowersTattoo.jpg' } };
-    newData[1] = { isEmpty: false, image:{ uri: 'http://box5850.temp.domains/~crollme/images/cardTattoo.jpg' } };
-    newData[2] = { isEmpty: false, image:{ uri: 'http://box5850.temp.domains/~crollme/images/skeletonArmTattoo.jpg' } };
-    newData[3] = { isEmpty: false, image:{ uri: 'http://box5850.temp.domains/~crollme/images/swordTattoo.jpg' } };
-    newData[4] = { isEmpty: false, image:{ uri: 'http://box5850.temp.domains/~crollme/images/tribalTattoo.jpg' } };
+    newData[0] = { isEmpty: false, image:{ uri: 'http://box5850.temp.domains/~crollme/images/tiger.png' } };
     setData(newData);
   }, []);
 

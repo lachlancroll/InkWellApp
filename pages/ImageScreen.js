@@ -42,7 +42,8 @@ const ImageScreen = ({ navigation }) => {
     };
 
     try {
-      const response = await axios.post('http://192.168.1.112:5000/upload', requestData);
+      //const response = await axios.post('http://172.19.128.164:5000/test', requestData);
+      const response = await axios.post('http://172.19.129.151:5000/test');
       // Set the generated image uri here
       setGeneratedUri(response.data.img);
       setModalVisible(true);  // Show the modal on successful image generation
